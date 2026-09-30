@@ -1,81 +1,81 @@
 # Containerization App (Python)
 
-Proyecto de microservicios en Python para la evaluación de Containerization.
+Python microservices project for the Containerization assessment.
 
-Arquitectura:
-- web: Flask (contenedor 8080, host 18081)
-- api: Flask + PostgreSQL (contenedor 3000, host 13001)
-- db: PostgreSQL (contenedor 5432, sin puerto publicado en host)
+Architecture:
+- web: Flask (container port 8080, host port 18081)
+- api: Flask + PostgreSQL (container port 3000, host port 13001)
+- db: PostgreSQL (container port 5432, no host port published)
 
-Comunicación síncrona:
-- web -> api por HTTP
-- api -> db por conexión SQL
+Synchronous communication:
+- web -> api over HTTP
+- api -> db over SQL connection
 
-## Requisitos
+## Requirements
 
 - Docker
 - Docker Compose
 
-## Ejecutar local
+## Run locally
 
-Desde la raíz del proyecto:
+From the project root:
 
 ```bash
 docker compose up --build
 ```
 
-Abrir en navegador:
+Open in your browser:
 - http://localhost:18081
 
-Health API:
+API health endpoint:
 - http://localhost:13001/health
 
-Parar servicios:
+Stop services:
 
 ```bash
 docker compose down
 ```
 
-## Criterios de evaluación cubiertos (sin AWS)
+## Assessment criteria covered (without AWS)
 
-- Imagen propia de la app con Dockerfile
-- Servicio con múltiples contenedores (web + api + db)
-- Comunicación síncrona entre contenedores
-- Ejecución reproducible con Docker Compose
+- Custom app image built with Dockerfile
+- Multi-container service (web + api + db)
+- Synchronous communication between containers
+- Reproducible local execution with Docker Compose
 
-## Docker Hub (push de imágenes)
+## Docker Hub (push images)
 
-1. Iniciar sesión:
+1. Sign in:
 
 ```bash
 docker login
 ```
 
-2. Construir imágenes:
+2. Build images:
 
 ```bash
 docker compose build
 ```
 
-3. Etiquetar imágenes (cambia TU_USUARIO):
+3. Tag images (replace TU_USUARIO):
 
 ```bash
 docker tag todo-web TU_USUARIO/todo-web:1.0.0
 docker tag todo-api TU_USUARIO/todo-api:1.0.0
 ```
 
-4. Publicar:
+4. Push:
 
 ```bash
 docker push TU_USUARIO/todo-web:1.0.0
 docker push TU_USUARIO/todo-api:1.0.0
 ```
 
-## Guion corto para screencast
+## Short screencast script
 
-1. Explicar la arquitectura (web, api, db).
-2. Mostrar Dockerfile de web y api.
-3. Levantar con docker compose up --build.
-4. Probar creación, toggle y eliminación de tareas.
-5. Mostrar comunicación entre servicios con logs.
-6. Enseñar etiquetas y comandos de push a Docker Hub.
+1. Explain the architecture (web, api, db).
+2. Show the web and api Dockerfiles.
+3. Start everything with docker compose up --build.
+4. Demo create, toggle, and delete todo actions.
+5. Show service-to-service communication with logs.
+6. Show image tags and Docker Hub push commands.
