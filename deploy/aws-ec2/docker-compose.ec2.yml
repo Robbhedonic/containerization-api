@@ -1,0 +1,47 @@
+services:
+  web:
+    image: ${DOCKERHUB_USER}/todo-web:${IMAGE_TAG}
+    container_name: todo-web
+    restart: unless-stopped
+    environment:
+      - PORT=8080
+      - API_BASE_URL=http://api:3000
+    depends_on:
+      - api
+    ports:
+      - "80:8080"
+
+  api:
+    image: ${DOCKERHUB_USER}/todo-api:${IMAGE_TAG}
+    container_name: todo-api
+    restart: unless-stopped
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=todos
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    container_name: todo-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=todos
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d todos"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  db_data:
